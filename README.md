@@ -108,3 +108,92 @@ world (172.17.0.12)!%
 ```
 
 ![admin ui](assets/admin.png)
+
+## Conduit
+
+### Installation
+
+```bash
+$ conduit install | kubectl apply -f -
+```
+
+Output:
+
+```bash
+namespace "conduit" created
+serviceaccount "conduit-controller" created
+clusterrole.rbac.authorization.k8s.io "conduit-controller" created
+clusterrolebinding.rbac.authorization.k8s.io "conduit-controller" configured
+serviceaccount "conduit-prometheus" created
+clusterrole.rbac.authorization.k8s.io "conduit-prometheus" created
+clusterrolebinding.rbac.authorization.k8s.io "conduit-prometheus" configured
+service "api" created
+service "proxy-api" created
+deployment.extensions "controller" created
+service "web" created
+deployment.extensions "web" created
+service "prometheus" created
+deployment.extensions "prometheus" created
+configmap "prometheus-config" created
+service "grafana" created
+deployment.extensions "grafana" created
+configmap "grafana-config" created
+configmap "grafana-dashboards" created
+```
+
+### Check
+
+```bash
+$ conduit check
+```
+
+Output:
+
+```bash
+kubernetes-api: can initialize the client.......................................[ok]
+kubernetes-api: can query the Kubernetes API....................................[ok]
+kubernetes-api: is running the minimum Kubernetes API version...................[ok]
+conduit-api: can query the Conduit API..........................................[ok]
+conduit-api[telemetry]: control plane can use telemetry service.................[ERROR] -- Error talking to telemetry service from control plane: rpc error: code = Unknown desc = Get http://prometheus.conduit.svc.cluster.local:9090/api/v1/query?query=reports_total%5B30s%5D: dial tcp: i/o timeout
+conduit-version: cli is up-to-date..............................................[ok]
+conduit-version: control plane is up-to-date....................................[ok]
+
+Status check results are [ERROR]
+```
+
+### Dashboard
+
+```bash
+# Hint open the dashboard immediately to prevent the issue above from happening
+$ conduit dashboard
+```
+
+Output:
+
+```bash
+Conduit dashboard available at:
+http://127.0.0.1:49646/api/v1/namespaces/conduit/services/web:http/proxy/
+Opening the default browser
+Starting to serve on 127.0.0.1:49646
+```
+
+### Deployment
+
+```bash
+$ conduit inject services/echo-conduit/deployment.yml | kubectl apply -f -
+```
+
+### Delete
+
+```bash
+$ conduit install | kubectl delete -f -
+```
+
+### Stats
+
+```bash
+$ conduit stat deployments
+$ conduit tap deploy echo
+```
+
+![conduit-ui](assets/conduit.png)

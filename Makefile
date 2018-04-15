@@ -40,3 +40,9 @@ l5d-test:
 ADMIN_PORT=$(shell kubectl get svc l5d -o jsonpath='{.spec.ports[?(@.name=="admin")].nodePort}')
 l5d-dashboard:
 	@open http://$(shell minikube ip):${ADMIN_PORT}
+
+conduit-test:
+	@curl http://$(shell minikube ip):$(shell kubectl get svc echo -o jsonpath='{.spec.ports[0].nodePort}')
+
+conduit-simulate:
+	wrk -d300 http://$(shell minikube ip):$(shell kubectl get svc echo -o jsonpath='{.spec.ports[0].nodePort}')
