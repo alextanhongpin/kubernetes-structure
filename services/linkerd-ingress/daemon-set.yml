@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: l5d
+  name: l5d
+  # namespace: l5d-system
+spec:
+  template:
+    metadata:
+      labels:
+        app: l5d
+    spec:
+      volumes:
+      - name: l5d-config
+        configMap:
+          name: l5d-config
+      containers:
+      - name: l5d
+        image: buoyantio/linkerd:1.3.6
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        args:
+        - /io.buoyant/linkerd/config/config.yaml
+        ports:
+        - name: http
+          containerPort: 80
+        - name: admin
+          containerPort: 9990
+        volumeMounts:
+        - name: l5d-config
+          mountPath: /io.buoyant/linkerd/config
+          readOnly: true
+      
+      - name: kubectl
+        image: buoyantio/kubectl:v1.8.5
+        imagePullPolicy: IfNotPresent
+        args: ["proxy", "-p", "8001"]

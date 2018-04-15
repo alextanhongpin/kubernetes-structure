@@ -197,3 +197,37 @@ $ conduit tap deploy echo
 ```
 
 ![conduit-ui](assets/conduit.png)
+
+## Linkerd Ingress
+
+```bash
+# Enable Ingress
+$ minikube addons enable ingress
+
+$ kubectl create ns l5d-system
+$ kubectl apply -f services/linkerd-ingress
+
+# Port-forward ui
+# $ kubectl port-forward l5d-rhbrr 9990:9990
+
+# In minikube, external load balancer support is unavailable, use hostIP
+HOST_IP=$(kubectl get po -l app=l5d -o jsonpath="{.items[0].status.hostIP}")
+L5D_SVC_IP=$HOST_IP:$(kubectl get svc l5d -o 'jsonpath={.spec.ports[0].nodePort}')
+curl http://$L5D_SVC_IP
+open http://$HOST_IP:$(kubectl get svc l5d -o 'jsonpath={.spec.ports[1].nodePort}')
+
+# Log the linkerd pods
+$ kubectl logs $(kubectl get po -l app=l5d  -o jsonpath='{.items[0].metadata.name}') l5d
+
+# Test
+$ curl -H "Host: world.v2" http://$L5D_SVC_IP
+world (172.17.0.16)!%
+```
+
+### Ingress
+
+```bash
+$ kubectl get ingress
+NAME          HOSTS      ADDRESS   PORTS     AGE
+hello-world   world.v2             80        11m
+```
