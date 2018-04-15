@@ -105,5 +105,6 @@ Output:
 Hello (172.17.0.9) world (172.17.0.12)!!http_proxy=http://192.168.99.100:30891 curl -s http://hello
 Hello (172.17.0.9) world (172.17.0.10)!!http_proxy=http://192.168.99.100:30891 curl -s http://world
 world (172.17.0.12)!%
-
 ```
+
+![admin ui](assets/admin.png)
