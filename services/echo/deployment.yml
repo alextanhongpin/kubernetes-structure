@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      app: echo
+      tier: backend
+      track: stable
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: echo
+        tier: backend
+        track: stable
+    spec:
+      containers:
+      - name: echo
+        image: alextanhongpin/echo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
