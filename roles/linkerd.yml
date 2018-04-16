@@ -13,16 +13,6 @@ rules:
     resources: [ "ingresses" ]
     verbs: ["get", "watch", "list"]
 ---
-# grant namerd permissions to custom resource definitions in k8s 1.8+ and third party resources in k8s < 1.8 for dtab storage
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: namerd-dtab-storage
-rules:
-  - apiGroups: ["l5d.io"]
-    resources: ["dtabs"]
-    verbs: ["get", "watch", "list", "update", "create"]
----
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -34,18 +24,5 @@ subjects:
 roleRef:
   kind: ClusterRole
   name: linkerd-endpoints-reader
-  apiGroup: rbac.authorization.k8s.io
----
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: namerd-role-binding
-subjects:
-  - kind: ServiceAccount
-    name: default
-    namespace: default
-roleRef:
-  kind: ClusterRole
-  name: namerd-dtab-storage
   apiGroup: rbac.authorization.k8s.io
 ---

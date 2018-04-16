@@ -21,16 +21,3 @@ spec:
         env:
         - name: PORT
           value: 0.0.0.0:50051
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: grpc-server
-spec:
-  selector:
-    app: grpc-server
-  clusterIP: None
-  ports:
-  - name: grpc
-    port: 50051
-    targetPort: 50051

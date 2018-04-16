@@ -6,15 +6,13 @@ spec:
   selector:
     matchLabels:
       app: echo
-      tier: backend
-      track: stable
   replicas: 5
   template:
     metadata:
       labels:
         app: echo
         tier: backend
-        track: stable
+        track: canary
     spec:
       containers:
       - name: echo

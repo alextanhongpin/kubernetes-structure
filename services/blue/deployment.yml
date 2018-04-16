@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blue
+spec:
+  selector:
+    matchLabels:
+      app: blue
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: blue
+        tier: backend
+        track: canary
+    spec:
+      containers:
+      - name: echo
+        image: alextanhongpin/echo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080

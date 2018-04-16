@@ -1,0 +1,55 @@
+# kind: ConfigMap
+# apiVersion: v1
+# metadata:
+#   name: namerctl-script
+# data:
+#   createNs.sh: |-
+#     #!/bin/sh
+#     set -e
+#     if namerctl dtab get external > /dev/null 2>&1; then
+#       echo "external namespace already exists"
+#     else
+#       echo "
+#       /host       => /#/io.l5d.k8s/default/http/hello;
+#       /svc/*      => /host;
+#       " | namerctl dtab create external -
+#     fi
+#     if namerctl dtab get internal > /dev/null 2>&1; then
+#       echo "internal namespace already exists"
+#     else
+#       echo "
+#       /srv        => /#/io.l5d.k8s/default/http;
+#       /host       => /srv;
+#       /tmp        => /srv;
+#       /svc        => /host;
+#       /host/world => /srv/world-v1;
+#       " | namerctl dtab create internal -
+#     fi
+# ---
+# kind: Job
+# apiVersion: batch/v1
+# metadata:
+#   name: namerctl
+# spec:
+#   template:
+#     metadata:
+#       name: namerctl
+#     spec:
+#       volumes:
+#       - name: namerctl-script
+#         configMap:
+#           name: namerctl-script
+#           defaultMode: 0755
+#       containers:
+#       - name: namerctl
+#         image: linkerd/namerctl:0.8.6
+#         env:
+#         - name: NAMERCTL_BASE_URL
+#           value: http://namerd.default.svc.cluster.local:4180
+#         command:
+#         - "/namerctl/createNs.sh"
+#         volumeMounts:
+#         - name: "namerctl-script"
+#           mountPath: "/namerctl"
+#           readOnly: true
+#       restartPolicy: OnFailure
