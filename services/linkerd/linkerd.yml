@@ -60,13 +60,16 @@ data:
       - port: 4141
         ip: 0.0.0.0
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   labels:
     app: l5d
   name: l5d
 spec:
+  selector:
+    matchLabels:
+      app: l5d
   template:
     metadata:
       labels:
