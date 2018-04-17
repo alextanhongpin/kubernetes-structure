@@ -4,7 +4,8 @@
 
 ```bash
 # Start the local minikube with RBAC enabled
-$ minikube start --extra-config=apiserver.Authorization.Mode=RBAC
+# Default memory is 1024 and cpu is 1
+$ minikube start --memory 2048 --cpus 2 --extra-config=apiserver.Authorization.Mode=RBAC
 
 # Use local docker image
 $ eval $(minikube docker-env)
@@ -231,3 +232,5 @@ $ kubectl get ingress
 NAME          HOSTS      ADDRESS   PORTS     AGE
 hello-world   world.v2             80        11m
 ```
+
+###

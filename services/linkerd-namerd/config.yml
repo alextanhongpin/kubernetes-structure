@@ -18,11 +18,12 @@ data:
       label: outgoing
       interpreter:
         kind: io.l5d.namerd
-        dst: /$/inet/namerd.default.svc.cluster.local/4100
+        # dst: /$/inet/namerd.default.svc.cluster.local/4100
+        dst: /$/inet/namerd.namerd.svc.cluster.local/4100
         namespace: internal
         transformers:
         - kind: io.l5d.k8s.daemonset
-          namespace: default
+          namespace: l5d # Since we are deploying linkerd to the default namespace
           port: incoming
           service: l5d
       servers:
@@ -36,7 +37,8 @@ data:
       label: incoming
       interpreter:
         kind: io.l5d.namerd
-        dst: /$/inet/namerd.default.svc.cluster.local/4100
+        # dst: /$/inet/namerd.default.svc.cluster.local/4100
+        dst: /$/inet/namerd.namerd.svc.cluster.local/4100
         namespace: internal
         transformers:
         - kind: io.l5d.k8s.localnode
@@ -48,7 +50,7 @@ data:
       label: external
       interpreter:
         kind: io.l5d.namerd
-        dst: /$/inet/namerd.default.svc.cluster.local/4100
+        dst: /$/inet/namerd.namerd.svc.cluster.local/4100
         namespace: external
       servers:
       - port: 4142

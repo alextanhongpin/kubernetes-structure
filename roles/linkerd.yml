@@ -20,9 +20,34 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: default
+    namespace: default # If you run it in a different namespace, set that namespace.
 roleRef:
   kind: ClusterRole
   name: linkerd-endpoints-reader
   apiGroup: rbac.authorization.k8s.io
 ---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: l5d-linkerd-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: l5d # If you run it in a different namespace, set that namespace.
+roleRef:
+  kind: ClusterRole
+  name: linkerd-endpoints-reader
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: namerd-linkerd-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: namerd # If you run it in a different namespace, set that namespace.
+roleRef:
+  kind: ClusterRole
+  name: linkerd-endpoints-reader
+  apiGroup: rbac.authorization.k8s.io

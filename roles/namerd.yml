@@ -19,9 +19,43 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: default
+    # In this scenario, the namespace has to be the same as the namespace
+    # linkerd is running, since linkerd is required to make a call to the
+    # CustomResourceDefinition API
+    namespace: namerd
 roleRef:
   kind: ClusterRole
   name: namerd-dtab-storage
   apiGroup: rbac.authorization.k8s.io
 ---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: l5d-namerd-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: default
+    # In this scenario, the namespace has to be the same as the namespace
+    # linkerd is running, since linkerd is required to make a call to the
+    # CustomResourceDefinition API
+    namespace: l5d
+roleRef:
+  kind: ClusterRole
+  name: namerd-dtab-storage
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: default-namerd-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: default
+    # In this scenario, the namespace has to be the same as the namespace
+    # linkerd is running, since linkerd is required to make a call to the
+    # CustomResourceDefinition API
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: namerd-dtab-storage
+  apiGroup: rbac.authorization.k8s.io

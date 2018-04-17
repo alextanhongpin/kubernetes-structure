@@ -20,29 +20,30 @@ test:
 
 # Switch to a different namespace, so that you don't have to specify the namespace all the time
 # make switch NAMESPACE=default
-context:
+set-context:
 	@kubectl config set-context $(shell kubectl config current-context) --namespace=${NS}
 
-getcontext:
+get-contexts:
 	@kubectl config get-contexts
 
-l5d-verify:
-	@kubectl -n ${NAMESPACE} port-forward $(shell kubectl -n ${NAMESPACE} get pod -l app=l5d -o jsonpath='{.items[0].metadata.name}') 9990 &
 
-OUTGOING_PORT := $(shell kubectl get svc l5d -o jsonpath='{.spec.ports[0].nodePort}' -n ${NAMESPACE})
-L5D_INGRESS_LB := http://$(shell minikube ip):${OUTGOING_PORT}
+# l5d-verify:
+# 	@kubectl -n ${NAMESPACE} port-forward $(shell kubectl -n ${NAMESPACE} get pod -l app=l5d -o jsonpath='{.items[0].metadata.name}') 9990 &
 
-l5d-test:
-	@curl -H "Host: hello" ${L5D_INGRESS_LB}
-	http_proxy=${L5D_INGRESS_LB} curl -s http://hello
-	http_proxy=${L5D_INGRESS_LB} curl -s http://world
+# OUTGOING_PORT := $(shell kubectl get svc l5d -o jsonpath='{.spec.ports[0].nodePort}' -n ${NAMESPACE})
+# L5D_INGRESS_LB := http://$(shell minikube ip):${OUTGOING_PORT}
 
-ADMIN_PORT=$(shell kubectl get svc l5d -o jsonpath='{.spec.ports[?(@.name=="admin")].nodePort}')
-l5d-dashboard:
-	@open http://$(shell minikube ip):${ADMIN_PORT}
+# l5d-test:
+# 	@curl -H "Host: hello" ${L5D_INGRESS_LB}
+# 	http_proxy=${L5D_INGRESS_LB} curl -s http://hello
+# 	http_proxy=${L5D_INGRESS_LB} curl -s http://world
 
-conduit-test:
-	@curl http://$(shell minikube ip):$(shell kubectl get svc echo -o jsonpath='{.spec.ports[0].nodePort}')
+# ADMIN_PORT=$(shell kubectl get svc l5d -o jsonpath='{.spec.ports[?(@.name=="admin")].nodePort}')
+# l5d-dashboard:
+# 	@open http://$(shell minikube ip):${ADMIN_PORT}
 
-conduit-simulate:
-	wrk -d300 http://$(shell minikube ip):$(shell kubectl get svc echo -o jsonpath='{.spec.ports[0].nodePort}')
+# conduit-test:
+# 	@curl http://$(shell minikube ip):$(shell kubectl get svc echo -o jsonpath='{.spec.ports[0].nodePort}')
+
+# conduit-simulate:
+# 	wrk -d300 http://$(shell minikube ip):$(shell kubectl get svc echo -o jsonpath='{.spec.ports[0].nodePort}')
