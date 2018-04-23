@@ -33,7 +33,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: l5d # If you run it in a different namespace, set that namespace.
+    namespace: linkerd # If you run it in a different namespace, set that namespace.
 roleRef:
   kind: ClusterRole
   name: linkerd-endpoints-reader

@@ -3,7 +3,38 @@
 Runs linkerd in daemonset, in linker-to-linker mode, using namerd to route requests,
 and handling edge traffic on a separate linkerd router.
 
-Used in conjunction with `services/namerd-http` and blablabla.
+## Setup Namespaces
+
+```bash
+$ kubectl create ns linkerd
+namespace "linkerd" created
+$ kubectl create ns namerd
+namespace "namerd" created
+```
+
+## Setup Roles
+
+```bash
+$ kubectl apply -f roles
+```
+
+Output:
+
+```bash
+clusterrole.rbac.authorization.k8s.io "cluster-writer" configured
+clusterrole.rbac.authorization.k8s.io "cluster-reader" configured
+clusterrolebinding.rbac.authorization.k8s.io "cluster-write" configured
+clusterrolebinding.rbac.authorization.k8s.io "cluster-read" configured
+rolebinding.rbac.authorization.k8s.io "sd-build-write" unchanged
+clusterrole.rbac.authorization.k8s.io "linkerd-endpoints-reader" configured
+clusterrolebinding.rbac.authorization.k8s.io "linkerd-role-binding" configured
+clusterrolebinding.rbac.authorization.k8s.io "l5d-linkerd-role-binding" configured
+clusterrolebinding.rbac.authorization.k8s.io "namerd-linkerd-role-binding" configured
+clusterrole.rbac.authorization.k8s.io "namerd-dtab-storage" configured
+clusterrolebinding.rbac.authorization.k8s.io "namerd-role-binding" configured
+clusterrolebinding.rbac.authorization.k8s.io "l5d-namerd-role-binding" configured
+clusterrolebinding.rbac.authorization.k8s.io "default-namerd-role-binding" configured
+```
 
 ## Run Linkerd and Namerd
 
@@ -35,14 +66,110 @@ TODO: Automate it with `Job`.
 $ make -f Namerd.mk setup
 ```
 
-## Call 
+## Setup Services
 
-curl -H "Host: hello" http://$(minikube ip):$(kubectl get svc l5d -o jsonpath='{.spec.ports[?(@.name=="outgoing")].nodePort}' -n l5d)
+Blue Service:
 
-Hello (172.17.0.15) world (172.17.0.19)!!%
+```bash
+$ kubectl apply -f services/blue
+deployment.apps "blue" created
+service "blue" created
+```
 
-# World
-curl -H "Host: world" http://$(minikube ip):$(kubectl get svc l5d -o jsonpath='{.spec.ports[?(@.name=="outgoing")].nodePort}' -n l5d)
-world (172.17.0.18)!%
+Green Service:
 
-curl -H "Host: blue" http://$(minikube ip):$(kubectl get svc l5d -o jsonpath='{.spec.ports[?(@.name=="outgoing")].nodePort}' -n l5d)
+```bash
+$ kubectl apply -f services/green
+deployment.apps "green" created
+service "green" created
+```
+
+## Test
+
+### Green Service
+
+Our namerd `internal.dtab` settings is as follow, which points all service call to the blue service:
+
+```dtab
+/srv        => /#/io.l5d.k8s/default/http;
+/host       => /srv;
+/tmp        => /srv;
+/svc        => /host;
+/svc/green  => /srv/blue;
+```
+
+```bash
+$ curl -H "Host: green" localhost:4140
+```
+
+Output:
+
+```bash
+{"hostname":"blue-57997758d6-s28r7","text":"hello"}
+```
+
+
+### Blue Service
+
+
+```bash
+$ curl -H "Host: blue" localhost:4140
+```
+
+Output:
+
+```bash
+{"hostname":"blue-57997758d6-hh2lh","text":"hello"}
+```
+
+## Simulate Traffic
+
+```bash
+$ wrk -d300s -H "Host: green" http://localhost:4140
+# or
+$ make -f Namerd.mk simulate
+```
+
+## Shift Traffic
+
+Shift ten percent of the traffic to green service:
+
+```bash
+$ make -f Namerd.mk tenth
+```
+
+Shift half the traffic to green service:
+
+```bash
+$ make -f Namerd.mk half
+```
+
+Shift completely to green service:
+
+```bash
+$ make -f Namerd.mk full
+```
+
+## Kill
+
+Killing the green service will bring the service back to blue automagically :smile:. Awesome right?
+
+## Destroy
+
+Remove blue and green services:
+
+```bash
+$ kubectl delete --all all
+```
+
+Remove linkerd:
+
+```bash
+$ kubectl delete --all all -n linkerd
+```
+
+Remove namerd:
+
+```bash
+$ kubectl delete --all all -n namerd
+```

@@ -38,7 +38,7 @@ subjects:
     # In this scenario, the namespace has to be the same as the namespace
     # linkerd is running, since linkerd is required to make a call to the
     # CustomResourceDefinition API
-    namespace: l5d
+    namespace: linkerd
 roleRef:
   kind: ClusterRole
   name: namerd-dtab-storage

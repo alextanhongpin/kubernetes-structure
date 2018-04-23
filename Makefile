@@ -3,7 +3,7 @@ IP := 30420
 NAMESPACE := default
 
 start:
-	@minikube start --extra-config=apiserver.Authorization.Mode=RBAC
+	@minikube start --memory 2048 --cpus 2 --extra-config=apiserver.Authorization.Mode=RBAC
 	@eval $(minikube docker-env)
 
 stop:

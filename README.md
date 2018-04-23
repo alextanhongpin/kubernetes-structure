@@ -232,5 +232,3 @@ $ kubectl get ingress
 NAME          HOSTS      ADDRESS   PORTS     AGE
 hello-world   world.v2             80        11m
 ```
-
-###

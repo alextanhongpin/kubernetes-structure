@@ -23,7 +23,7 @@ data:
         namespace: internal
         transformers:
         - kind: io.l5d.k8s.daemonset
-          namespace: l5d # Since we are deploying linkerd to the default namespace
+          namespace: linkerd # Since we are deploying linkerd to the default namespace
           port: incoming
           service: l5d
       servers:
