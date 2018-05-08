@@ -232,3 +232,11 @@ $ kubectl get ingress
 NAME          HOSTS      ADDRESS   PORTS     AGE
 hello-world   world.v2             80        11m
 ```
+
+## Checklist
+
+- [x] service discovery
+- [x] http load balancing
+- [x] gRPC load balancing
+- [ ] fluentd logging
+- [ ] metrics aggregation with heapster
