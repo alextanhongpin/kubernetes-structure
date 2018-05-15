@@ -2,4 +2,4 @@
 /host       => /srv;
 /tmp        => /srv;
 /svc        => /host;
-/svc/green  => /srv/blue | /srv/green;
+/svc/green  => /srv/green | /srv/blue;

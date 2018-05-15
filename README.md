@@ -51,7 +51,14 @@ CURRENT   NAME       CLUSTER    AUTHINFO   NAMESPACE
 *         minikube   minikube   minikube   dev
 ```
 
+Shortcut:
 
+```bash
+$ alias ksc='kubectl config set-context $(kubectl config current-context) --namespace '
+
+# Switch to default
+$ ksc default
+```
 
 ## Deploy Linkerd
 
