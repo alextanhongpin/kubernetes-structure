@@ -1,4 +1,3 @@
-KUBE_IP := $(shell minikube ip)
 
 setup:
 	$(eval NAMERD_IP=$(shell kubectl get svc namerd -o jsonpath='{.spec.ports[?(@.name=="http")].nodePort}' -n namerd))

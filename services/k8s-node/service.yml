@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-node # Service name
+spec:
+  type: NodePort 
+  selector:
+    app: k8s-node
+  # clusterIP: None
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000 # Targets the Pod container port
+    nodePort: 30001 # Accessible through port 30001.  The range of valid ports is 30000-32767
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-express # Service name
+spec:
+  # type: NodePort 
+  selector:
+    app: k8s-express
+  # clusterIP: None
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000 # Targets the Pod container port
+    # nodePort: 30002 # Accessible through port 30001.  The range of valid ports is 30000-32767

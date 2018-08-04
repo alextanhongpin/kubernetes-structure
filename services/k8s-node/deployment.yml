@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-node # Deployment name
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-node
+  template:
+    metadata:
+      labels:
+        app: k8s-node # Pod name
+    spec:
+      containers:
+      - name: k8s-node # Image name
+        image: alextanhongpin/k8s-node:latest 
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: IfNotPresent
+        env:
+        # Is this required for minikube?
+        - name: GET_HOSTS_FROM
+          value: dns
+        # This will allow us to call from the other services
+        - name: SERVICE_URL
+          value: http://k8s-express.default.svc.cluster.local
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-express # Deployment name
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-express
+  template:
+    metadata:
+      labels:
+        app: k8s-express # Pod name
+    spec:
+      containers:
+      - name: k8s-express # Image name
+        image: alextanhongpin/k8s-node:latest 
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: IfNotPresent

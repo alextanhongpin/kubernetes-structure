@@ -3,7 +3,8 @@ IP := 30420
 NAMESPACE := default
 
 start:
-	@minikube start --memory 2048 --cpus 2 --extra-config=apiserver.Authorization.Mode=RBAC
+	# downgrade to enable kube-dns minikube start --iso-url=https://storage.googleapis.com/minikube/iso/minikube-v0.23.5.iso
+	@minikube start --memory 2048 --cpus 2 --extra-config=apiserver.Authorization.Mode=RBAC --kubernetes-version=v1.10.0
 	@eval $(minikube docker-env)
 
 stop:

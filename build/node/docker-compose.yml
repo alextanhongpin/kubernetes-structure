@@ -1,0 +1,7 @@
+# 3.7 refers to Docker engine release 18.06.0+
+version: '3.7'
+services:
+  server:
+    image: alextanhongpin/k8s-node:latest
+    ports:
+      - 127.0.0.1:3000:3000

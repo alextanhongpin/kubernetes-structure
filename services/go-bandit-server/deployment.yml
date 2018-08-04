@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-bandit-server
+spec:
+  selector:
+    matchLabels:
+      app: go-bandit-server
+  template:
+    metadata:
+      labels:
+        app: go-bandit-server
+        tier: backend
+    spec:
+      containers:
+      - name: go-bandit-server
+        image: alextanhongpin/go-bandit-server
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9090
+    
