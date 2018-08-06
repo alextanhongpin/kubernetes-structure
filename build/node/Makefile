@@ -6,3 +6,6 @@ up:
 
 down:
 	docker-compose down
+
+docker-alpine:
+	docker build -f Dockerfile.alpine -t alextanhongpin/k8s-node-alpine .
