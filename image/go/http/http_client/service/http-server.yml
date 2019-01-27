@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: http-server
+spec:
+        selector:
+                matchLabels:
+                        run: http-server
+        replicas: 1
+        template:
+                metadata:
+                        labels:
+                                run: http-server
+                spec:
+                        containers:
+                        - name: http-server
+                          image: alextanhongpin/http
+                          imagePullPolicy: IfNotPresent
+                          command: ["./app", "-service_uri=http://http-server:8080/hello", "-text=server"]
+                          ports:
+                          - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+        name: http-server
+        labels:
+                run: http-server
+spec:
+        ports:
+        - port: 8080
+          protocol: TCP
+        selector:
+          run: http-server
+        # When deploying Kubernetes on Docker Desktop, we need to use the type NodePort in order to call the service.
+        # We can call the service by simply calling localhost:<NODE_PORT_IP>
+        # curl http://localhost:$(k get svc http-server -o=jsonpath='{.spec.ports[0].nodePort}')
+        type: NodePort
