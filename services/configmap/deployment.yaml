@@ -49,7 +49,6 @@ spec:
   # type: ClusterIP
   # clusterIP: ""# This does not work.
   ports:
-  # - name: go-server
   - protocol: TCP
     port: 80 # Expose as port 8080.
     targetPort: 8080 # Which port do pods selected by this service expose?
