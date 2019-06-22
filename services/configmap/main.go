@@ -14,6 +14,6 @@ func main() {
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, `{"message": "%s"}`, greeting)
 	})
-	log.Println("listening to port *:8080)
+	log.Println("listening to port *:8080")
 	log.Fatal(http.ListenAndServe("0.0.0.0:8080", mux))
 }
