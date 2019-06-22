@@ -5,11 +5,14 @@ metadata:
 data:
         greeting: hello world
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: go-server-deployment
+  labels:
+    app: go-server
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: go-server
@@ -20,7 +23,7 @@ spec:
         app: go-server
     spec: 
       containers:
-      - name: go-server 
+      - name: go-server
         image: alextanhongpin/go-server:latest
         imagePullPolicy: IfNotPresent
         # Define the container port.
@@ -41,14 +44,15 @@ metadata:
   name: go-server-service
 spec:
   # Using Docker Desktop, NodePort is required (?).
-  # type: NodePort
-  type: LoadBalancer
+  type: NodePort
+  # type: LoadBalancer
   # type: ClusterIP
   # clusterIP: ""# This does not work.
   ports:
-  - name: go-server
-    port: 8080 # Expose as port 8080.
-    # targetPort: 8080 # Which port do pods selected by this service expose?
+  # - name: go-server
+  - protocol: TCP
+    port: 80 # Expose as port 8080.
+    targetPort: 8080 # Which port do pods selected by this service expose?
   selector:
     # This needs to match the deployment selector.
     app: go-server
