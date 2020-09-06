@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+  labels:
+    app: client
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: client
+        tier: backend
+    spec:
+      containers:
+        - name: client
+          image: alextanhongpin/client:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8080
+          env:
+            - name: SERVER_SERVICE_URL
+              # DNS naming convention: service.namespace.svc.cluster-domain.tld
+              value: "http://server-service"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-service
+spec:
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  selector:
+    app: client
+    tier: backend
