@@ -1,4 +1,4 @@
-FROM golang:1.12.6-alpine3.10 AS builder
+FROM golang:1.15.1-alpine3.12 AS builder
 
 WORKDIR $GOPATH/src/github.com/alextanhongpin/go-server
 
@@ -6,7 +6,7 @@ COPY main.go .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -i -o app .
 
-FROM alpine:3.10
+FROM alpine:3.12
 RUN apk --update --no-cache add ca-certificates
 
 WORKDIR /app/

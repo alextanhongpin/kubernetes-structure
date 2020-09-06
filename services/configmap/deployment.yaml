@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-        name: go-config
+  name: go-config
 data:
-        greeting: hello world
+  greeting: hello world
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -21,7 +21,7 @@ spec:
       labels:
         # This needs to match the selector.
         app: go-server
-    spec: 
+    spec:
       containers:
       - name: go-server
         image: alextanhongpin/go-server:latest
@@ -35,7 +35,7 @@ spec:
             valueFrom:
               configMapKeyRef:
                 # The ConfigMap containing the value you want to assign to GREETING.
-                name: go-config 
+                name: go-config
                 key: greeting
 ---
 apiVersion: v1
