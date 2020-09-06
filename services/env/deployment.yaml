@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: message-config
+data:
+  message.what: "what is the message?"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: another-message-config
+data:
+  message: "what is the other message?"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-env-deployment
+  labels:
+    app: hello-env
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-env
+  template:
+    metadata:
+      labels:
+        app: hello-env
+    spec:
+      containers:
+        - name: hello-env
+          image: alextanhongpin/hello-env:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: GREETING
+              value: "this is a greeting"
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: message-config
+                  key: message.what
+            - name: ANOTHER_MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: another-message-config
+                  key: message
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-env-service
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  selector:
+    app: hello-env
