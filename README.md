@@ -247,3 +247,18 @@ hello-world   world.v2             80        11m
 - [x] gRPC load balancing
 - [ ] fluentd logging
 - [ ] metrics aggregation with heapster
+
+
+## Cheat Sheet
+
+Get all resources in a namespace:
+```bash
+$ kubectl get all --namespace tmp
+$ kubectl get all -n tmp
+```
+
+Force delete all pods:
+
+```bash
+$ kubectl delete pod <pod_name> -n <namespace> --grace-period 0 --force
+```
