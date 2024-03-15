@@ -1,12 +1,12 @@
-FROM golang:1.15.1-alpine3.12 AS builder
+FROM golang:1.22.1-alpine3.18 AS builder
 
 WORKDIR /app
 
 COPY client.go go.* ./
 
-RUN CGO_ENABLED=0 GOOS=linux go build -i -o app .
+RUN CGO_ENABLED=0 GOOS=linux go build -o app .
 
-FROM alpine:3.12
+FROM alpine:3.18
 RUN apk --update --no-cache add ca-certificates
 WORKDIR /app/
 
