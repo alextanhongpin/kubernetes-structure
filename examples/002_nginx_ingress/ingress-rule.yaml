@@ -12,10 +12,10 @@ spec:
     - host: localhost # So that we can reach it through localhost
       http:
         paths:
-          - path: /hello
+          - path: /hello # Anything that hits this path will hit the backend service.
             pathType: Prefix
             backend:
               service:
-                name: server-service
+                name: my-service # This targets the runing service at port 80.
                 port:
                   number: 80

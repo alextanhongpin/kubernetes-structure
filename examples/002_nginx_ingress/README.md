@@ -4,6 +4,8 @@ Installation and upgrade instructions: https://docs.nginx.com/nginx-ingress-cont
 
 ## Installation
 
+We first install the nginx ingress using helm chart.
+
 ```bash
 $ helm pull oci://ghcr.io/nginxinc/charts/nginx-ingress --untar --version 1.1.3
 
@@ -38,7 +40,13 @@ There's no ingress, we need to create a new ingress rule.
 
 What is an ingress rule? Ingress rule are a set resources that define how external traffic is routed to your services.
 
-We can apply both the dns-rule and prefix rule.
+We want to create a new ingress rule that will route traffic to our service.
+
+There are several ways to route traffic:
+- by hostname
+- by url path
+
+https://kubernetes.github.io/ingress-nginx/examples/rewrite/
 
 ## Exposing port
 
@@ -54,12 +62,12 @@ k port-forward svc/my-release-nginx-ingress-controller 3000:80
 First, create a new service that will be exposed through the ingress.
 
 ```bash
-cd services/client-server
-make docker-server
+cd services/server
+make build
 k apply -f .
 ```
 
-After applying, run:
+After applying, deploy our ingress:
 
 ```bash
 $ k apply -f .
@@ -69,7 +77,7 @@ The service is now reachable through `localhost:3000/hello`
 
 ```bash
 $ curl localhost:3000/hello
-{"hello": "world"}%
+Hello, World!
 ```
 
 It is not accessible through other endpoints.
@@ -84,3 +92,9 @@ $ curl localhost:3000
 </body>
 </html>
 ```
+
+
+The routing is as follow:
+
+- http://localhost:3000/hello -> ingress -> k8s-service -> my-service:80
+- http://localhost:3000 -> ingress (404)
