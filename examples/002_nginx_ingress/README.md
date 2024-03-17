@@ -98,3 +98,15 @@ The routing is as follow:
 
 - http://localhost:3000/hello -> ingress -> k8s-service -> my-service:80
 - http://localhost:3000 -> ingress (404)
+
+
+## Delete
+
+After finish, delete the resources:
+
+```bash
+$ helm uninstall my-release
+# Uninstalling does not remove the nginx-ingress resources.
+$ cd  nginx-ingress
+$ k delete -f crds
+```

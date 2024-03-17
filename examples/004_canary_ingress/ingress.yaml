@@ -1,0 +1,21 @@
+# Creates an Ingress resource that routes requests to the /hello path to the server-service.
+# curl localhost:3000/hello
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-demo
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: localhost # So that we can reach it through localhost
+      http:
+        paths:
+          - path: /hello # Anything that hits this path will hit the backend service.
+            pathType: Prefix
+            backend:
+              service:
+                name: my-service # This targets the runing service at port 80.
+                port:
+                  number: 80
